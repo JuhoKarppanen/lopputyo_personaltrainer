@@ -1,0 +1,338 @@
+General
+Personal Trainer REST API Documentation
+This REST API is designed to manage the relationship between personal trainers and their customers. It provides a set of CRUD (Create, Read, Update, Delete) operations to manage both customers and their associated training sessions.
+
+Overview:
+
+The API is structured around two main resources: Customers and Trainings.
+
+Customers represent the individuals who are receiving personal training. Each customer has attributes such as name and contact information.
+
+Trainings represent the individual training sessions that a customer has with their personal trainer. Each training session has attributes such as date, time, duration, and the specific exercises performed.
+
+There is a one-to-many relationship between customers and trainings, meaning that each customer can have multiple associated training sessions, but each training session is associated with only one customer.
+
+Base URL
+https://customer-rest-service-frontend-personaltrainer.2.rahtiapp.fi/api/
+Reset Database
+To reset database you can use the following request that deletes all data from the database and re-populate it with the original demo data.
+
+POST https://customer-rest-service-frontend-personaltrainer.2.rahtiapp.fi/reset
+Response:
+
+Upon successful reset, the API will return a 200 OK status code and the response body contains text: DB reset done. If the reset operation fails for any reason, the API will return an appropriate error status code and message.
+
+Customers
+Base URL
+https://customer-rest-service-frontend-personaltrainer.2.rahtiapp.fi/api/
+Endpoints
+Get All Customers
+Retrieve all customers
+
+Request:
+
+HTTP Method: GET
+Endpoint: /customers
+Request parameters: None
+Response:
+
+The response is a JSON object with a _embedded field containing an array of customers. Each customer object includes the following fields:
+
+firstname: The customer's first name. (string)
+lastname: The customer's last name. (string)
+streetaddress: The customer's street address. (string)
+postcode: The customer's postal code. (string)
+city: The city where the customer lives. (string)
+email: The customer's email address. (string)
+phone: The customer's phone number. (string)
+_links: A set of links related to the customer. Each link object includes:
+self: A link to the customer's own information. (string)
+customer: A link to the customer's information. (string)
+trainings: A link to the customer's trainings. (string)
+Example Response
+
+{
+  "_embedded": {
+    "customers": [
+      {
+        "firstname": "Mark",
+        "lastname": "Johnson",
+        "streetaddress": "5th Street",
+        "postcode": "23110",
+        "city": "Flintsone",
+        "email": "john@mail.com",
+        "phone": "232-2345540",
+        "_links": {
+          "self": {
+            "href": "https://customerrestservice-personaltraining.rahtiapp.fi/api/customers/1002"
+          },
+          "customer": {
+            "href": "https://customerrestservice-personaltraining.rahtiapp.fi/api/customers/1002"
+          },
+          "trainings": {
+            "href": "https://customerrestservice-personaltraining.rahtiapp.fi/api/customers/1002/trainings"
+          }
+        }
+      },
+      // Additional customers...
+    ]
+  }
+}
+Get Customer by Id
+Retrieve a specific customer's details.
+
+Request:
+
+HTTP Method: GET
+Endpoint: /customers/{id}
+Path parameters: {id} (integer, required) is the unique identifier of the customer
+Example Request:
+
+GET /customers/123
+Response:
+
+Body: JSON object with the customer's details.
+Create New Customer
+Create a new customer.
+
+Request:
+
+HTTP Method: POST
+Endpoint: /customers
+Request Headers:
+'Content-Type' : 'application/json'
+Request body: JSON object with the following fields (all required)
+firstname: The customer's first name. (string, required)
+lastname: The customer's last name. (string, required)
+email: The customer's email address. (string, required)
+phone: The customer's phone number. (string, required)
+streetaddress: The customer's street address. (string, required)
+postcode: The customer's postal code. (string, required)
+city: The city where the customer lives. (string, required)
+Example Request:
+
+POST https://customer-rest-service-frontend-personaltrainer.2.rahtiapp.fi/api/customers
+Content-Type: application/json
+
+{
+  "firstname": "John",
+  "lastname": "Smith",
+  "email": "j.s@smith.com",
+  "phone": "343-2332345",
+  "streetaddress": "Yellow Street 23",
+  "postcode": "344342",
+  "city": "Yellowstone"
+}
+Response:
+
+Body: JSON object with the created customer's details.
+Update Customer
+Update a specific customer's details.
+
+Request:
+
+HTTP Method: PUT
+Endpoint: /customers/{id}
+Path Parameters: id (integer, required): The unique identifier of the customer.
+Request Headers:
+'Content-Type' : 'application/json'
+Request body: JSON object containing the updated customer details (all fields optional).
+Example Request:
+
+PUT /customers/123
+Content-Type: application/json
+
+{
+    "firstname": "John",
+    "lastname": "Smith",
+    "email": "j.s@smith.com",
+    "phone": "342-2332345",
+    "streetaddress": "Yellow Street 23",
+    "postcode": "144342",
+    "city": "Yellowstone"
+}
+Response:
+
+Body: JSON object with the updated customer's details.
+Delete Customer
+Delete a specific customer.
+
+Request:
+
+HTTP Method: DELETE
+Endpoint: /customers/{id}
+Path Parameters: id (integer, required): The unique identifier of the customer.
+Response:
+
+Upon successful deletion, the API will return a 204 No Content status code. If the customer with the provided id does not exist, the API will return a 404 Not Found status code.
+Important Note:
+
+Deleting a customer will also delete all associated training sessions for that customer. This operation cannot be undone, so ensure that you want to delete both the customer and all their training sessions before making this request.
+
+
+Trainings
+Base URL
+https://customer-rest-service-frontend-personaltrainer.2.rahtiapp.fi/api/
+Endpoints
+Get All Trainings
+Retrieve all training sessions
+
+Request:
+
+HTTP Method: GET
+Endpoint: /trainings
+Request parameters: None
+Example Request:
+
+GET /trainings
+Response:
+
+The response will be a JSON object containing an array of training sessions. Each training session object includes the date, duration, activity, and several links related to the training session.
+Response Object:
+
+The response object will contain an _embedded object, which includes an array of trainings. Each training object will have the following properties:
+
+date: The date and time of the training session.
+duration: The duration of the training session, in minutes.
+activity: The type of activity performed during the training session.
+_links: An object containing links related to the training session.
+self: A link to the training session itself.
+training: Another link to the training session itself.
+customer: A link to the customer associated with the training session.
+{
+  "_embedded": {
+    "trainings": [
+      {
+        "date": "2024-04-18T18:59:46.350+00:00",
+        "duration": 30,
+        "activity": "Gym training",
+        "_links": {
+          "self": {
+            "href": "https://customerrestservice-personaltraining.rahtiapp.fi/api/trainings/3417"
+          },
+          "training": {
+            "href": "https://customerrestservice-personaltraining.rahtiapp.fi/api/trainings/3417"
+          },
+          "customer": {
+            "href": "https://customerrestservice-personaltraining.rahtiapp.fi/api/trainings/3417/customer"
+          }
+        }
+      },
+      {
+        "date": "2024-04-19T18:59:46.350+00:00",
+        "duration": 90,
+        "activity": "Zumba",
+        "_links": {
+          "self": {
+            "href": "https://customerrestservice-personaltraining.rahtiapp.fi/api/trainings/3418"
+          },
+          "training": {
+            "href": "https://customerrestservice-personaltraining.rahtiapp.fi/api/trainings/3418"
+          },
+          "customer": {
+            "href": "https://customerrestservice-personaltraining.rahtiapp.fi/api/trainings/3418/customer"
+          }
+        }
+      }
+    ]
+  }
+}
+Get Trainings with Customer Info
+Retrieve all training sessions along with their associated customer information.
+
+Request:
+
+HTTP Method: GET
+ENDPOINT: /gettrainings
+Request parameters: None
+Example Request:
+
+GET https://customer-rest-service-frontend-personaltrainer.2.rahtiapp.fi/api/gettrainings
+Response:
+
+The response will be a JSON object containing an array of training sessions. Each training session object includes the id, date, duration, activity, and the associated customer's information.
+
+id: The unique identifier of the training session.
+date: The date and time of the training session.
+duration: The duration of the training session, in minutes.
+activity: The type of activity performed during the training session.
+customer: An object containing the associated customer's information.
+Example Response:
+
+[
+  {
+    "id": 3417,
+    "date": "2024-04-18T18:59:46.350+00:00",
+    "duration": 30,
+    "activity": "Gym training",
+    "customer": {
+      "id": 1087,
+      "firstname": "John",
+      "lastname": "Johnson",
+      "streetaddress": "5th Street",
+      "postcode": "23110",
+      "city": "Flintsone",
+      "email": "john@mail.com",
+      "phone": "232-2345540"
+    }
+  },
+  {
+    "id": 3418,
+    "date": "2024-04-19T18:59:46.350+00:00",
+    "duration": 90,
+    "activity": "Zumba",
+    "customer": {
+      "id": 1088,
+      "firstname": "Mary",
+      "lastname": "Philips",
+      "streetaddress": "Hill Street 3",
+      "postcode": "23322",
+      "city": "Flintsone",
+      "email": "m.philips@mail.com",
+      "phone": "232-310122"
+    }
+  }
+]
+Add Training
+Add a new training session and link it to a customer.
+
+Request:
+
+HTTP Method: POST
+Endpoint: /trainings
+Request Headers:
+'Content-Type' : 'application/json'
+Body: JSON object containing the details of the new training session and a reference link to the customer.
+date: The date of the training session. The format must be ISO-8601 (e.g., "2024-11-27T09:12:00.000+000").
+activity: The type of activity performed during the training session.
+duration: The duration of the training session, in minutes.
+customer: A link to the customer associated with the training session.
+Example Request:
+
+POST /trainings
+Content-Type: application/json
+
+{
+    "date": "2024-01-01T12:00:00.000+000",
+    "activity": "Spinning",
+    "duration": "50",
+    "customer": "https://myserver.personaltrainer.api/api/customers/123"
+}
+Response:
+
+The response will be a JSON object containing the details of the newly created training session. If the creation is successful, the API will return a 201 Created status code.
+
+Delete Training
+Delete a specific training session.
+
+Request:
+
+HTTP Method: DELETE
+Endpoint: /trainings/{id}
+Path Parameters: id (integer, required). The unique identifier of the training session.
+Example Request:
+
+DELETE /trainings/123
+Response:
+
+Upon successful deletion, the API will return a 204 No Content status code. If the training session with the provided id does not exist, the API will return a 404 Not Found status code.
