@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import{ useEffect, useMemo, useState } from 'react'
 import { fetchTrainingsWithCustomer } from '../api'
 import type { TrainingWithCustomer } from '../types'
 import dayjs from 'dayjs'
