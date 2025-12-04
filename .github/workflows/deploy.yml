@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - Osa2
+      - Osa3
 
 jobs:
   build-and-deploy:
