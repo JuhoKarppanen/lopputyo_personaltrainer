@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { fetchCustomers, createCustomer, updateCustomer, deleteCustomer, createTraining, getIdFromSelfLink } from '../api'
 import type { Customer } from '../types'
+import { exportToCSV } from '../utils/csv'
 
 type SortState = { key: string | null; dir: 'asc' | 'desc' }
 
@@ -129,7 +130,6 @@ export default function CustomerList() {
     e.preventDefault()
     if (!trainingFor) return
     try {
-      // date from input type datetime-local -> convert to ISO
       const iso = new Date(newTraining.date).toISOString()
       await createTraining({ date: iso, activity: newTraining.activity, duration: Number(newTraining.duration), customerId: trainingFor })
       setTrainingFor(null)
@@ -137,6 +137,11 @@ export default function CustomerList() {
     } catch (err: any) {
       setError(String(err))
     }
+  }
+
+  function handleExportCSV() {
+    const exportColumns = ['firstname', 'lastname', 'email', 'phone', 'city', 'streetaddress', 'postcode']
+    exportToCSV(filtered, `customers_${new Date().toISOString().split('T')[0]}.csv`, exportColumns)
   }
 
   if (loading) return <div>Loading customers...</div>
@@ -147,6 +152,7 @@ export default function CustomerList() {
       <h2>Customers</h2>
       <div style={{ marginBottom: 12 }}>
         <button onClick={() => setShowAdd((s) => !s)}>{showAdd ? 'Cancel' : 'Add customer'}</button>
+        <button onClick={handleExportCSV} style={{ marginLeft: 8 }}>Export CSV</button>
       </div>
       {showAdd && (
         <form onSubmit={handleCreateCustomer} style={{ marginBottom: 12 }}>
