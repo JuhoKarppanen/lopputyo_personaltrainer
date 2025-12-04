@@ -2,8 +2,8 @@ import React from 'react'
 
 type State = { error: Error | null }
 
-export default class ErrorBoundary extends React.Component<{}, State> {
-  constructor(props: {}) {
+export default class ErrorBoundary extends React.Component<React.PropsWithChildren<{}>, State> {
+  constructor(props: React.PropsWithChildren<{}>) {
     super(props)
     this.state = { error: null }
   }
@@ -12,9 +12,9 @@ export default class ErrorBoundary extends React.Component<{}, State> {
     return { error }
   }
 
-  componentDidCatch(error: Error, info: any) {
+  componentDidCatch(_error: Error, _info: any) {
     // Could log to an external service here
-    // console.error('ErrorBoundary caught', error, info)
+    // console.error('ErrorBoundary caught', _error, _info)
   }
 
   render() {
