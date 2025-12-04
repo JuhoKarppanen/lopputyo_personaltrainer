@@ -13,8 +13,7 @@ export default class ErrorBoundary extends React.Component<React.PropsWithChildr
   }
 
   componentDidCatch(_error: Error, _info: any) {
-    // Could log to an external service here
-    // console.error('ErrorBoundary caught', _error, _info)
+    
   }
 
   render() {
