@@ -1,5 +1,5 @@
 import{ useEffect, useMemo, useState } from 'react'
-import { fetchTrainingsWithCustomer } from '../api'
+import { fetchTrainingsWithCustomer, deleteTraining, getIdFromSelfLink } from '../api'
 import type { TrainingWithCustomer } from '../types'
 import dayjs from 'dayjs'
 
@@ -27,6 +27,30 @@ export default function TrainingList() {
       mounted = false
     }
   }, [])
+
+  async function refresh() {
+    setLoading(true)
+    try {
+      const data = await fetchTrainingsWithCustomer()
+      setItems(data)
+    } catch (e: any) {
+      setError(String(e))
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  async function handleDeleteTraining(row: TrainingWithCustomer) {
+    const id = row.id ?? getIdFromSelfLink(row)
+    if (!id) return setError('Training id not found')
+    if (!confirm('Poista harjoitus?')) return
+    try {
+      await deleteTraining(id)
+      await refresh()
+    } catch (err: any) {
+      setError(String(err))
+    }
+  }
 
   const filtered = useMemo(() => {
     let res = items.slice()
@@ -94,6 +118,9 @@ export default function TrainingList() {
               <td>{row.duration}</td>
               <td>{row.activity}</td>
               <td>{row.customer ? `${row.customer.firstname} ${row.customer.lastname}` : ''}</td>
+              <td>
+                <button onClick={() => handleDeleteTraining(row)}>Delete</button>
+              </td>
             </tr>
           ))}
         </tbody>
