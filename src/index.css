@@ -94,3 +94,33 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+
+/* FullCalendar styles */
+:root {
+  --fc-border-color: rgba(255, 255, 255, 0.1);
+  --fc-button-bg-color: #1a1a1a;
+  --fc-button-border-color: #646cff;
+  --fc-button-hover-bg-color: #2a2a2a;
+  --fc-button-hover-border-color: #535bf2;
+  --fc-button-active-bg-color: #535bf2;
+  --fc-event-bg-color: #646cff;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --fc-border-color: rgba(0, 0, 0, 0.1);
+    --fc-button-bg-color: #f9f9f9;
+    --fc-button-border-color: #213547;
+    --fc-button-hover-bg-color: #e9e9e9;
+    --fc-event-bg-color: #646cff;
+  }
+}
+
+.fc {
+  margin: 1rem 0;
+}
+
+.fc .fc-button-group > * {
+  margin-right: 0.25rem;
+}
+
